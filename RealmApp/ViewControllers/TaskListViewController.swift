@@ -54,11 +54,10 @@ class TaskListViewController: UITableViewController {
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
 
-        let editAction = UIContextualAction(style: .normal, title: "Edit") { _, _, isDone in
+        let editAction = UIContextualAction(style: .normal, title: "Edit") { _, _, _ in
             self.showAlert(with: taskList) {
                 tableView.reloadRows(at: [indexPath], with: .automatic)
             }
-            isDone(true)
         }
 
         let doneAction = UIContextualAction(style: .normal, title: "Done") { _, _, isDone in
@@ -77,6 +76,7 @@ class TaskListViewController: UITableViewController {
         guard let indexPath = tableView.indexPathForSelectedRow else { return }
         guard let tasksVC = segue.destination as? TasksViewController else { return }
         let taskList = taskLists[indexPath.row]
+
         tasksVC.taskList = taskList
     }
 
@@ -118,6 +118,7 @@ extension TaskListViewController {
     private func save(_ taskList: String) {
         let taskList = TaskList(value: [taskList])
         StorageManager.shared.save(taskList)
+
         let rowIndex = IndexPath(row: taskLists.index(of: taskList) ?? 0, section: 0)
         tableView.insertRows(at: [rowIndex], with: .automatic)
     }

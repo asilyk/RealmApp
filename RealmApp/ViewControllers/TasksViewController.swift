@@ -45,6 +45,7 @@ class TasksViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TasksCell", for: indexPath)
         let task = indexPath.section == 0 ? currentTasks[indexPath.row] : completedTasks[indexPath.row]
         var content = cell.defaultContentConfiguration()
+
         content.text = task.name
         content.secondaryText = task.note
         cell.contentConfiguration = content
@@ -57,35 +58,27 @@ class TasksViewController: UITableViewController {
 
     // MARK: - UITableViewDelegate
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        guard let tasks = indexPath.section == 0 ? self.currentTasks : self.completedTasks else { return nil }
+        let task = tasks[indexPath.row]
+
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { _, _, _ in
-            if indexPath.section == 0 {
-                StorageManager.shared.delete(self.currentTasks[indexPath.row])
-            } else {
-                StorageManager.shared.delete(self.completedTasks[indexPath.row])
-            }
+            StorageManager.shared.delete(task)
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
 
-        let editAction = UIContextualAction(style: .normal, title: "Edit") { _, _, isDone in
-            let task: Task
-            if indexPath.section == 0 {
-                task = self.currentTasks[indexPath.row]
-            } else {
-                task = self.completedTasks[indexPath.row]
-            }
+        let editAction = UIContextualAction(style: .normal, title: "Edit") { _, _, _ in
             self.showAlert(with: task) {
                 tableView.reloadRows(at: [indexPath], with: .automatic)
             }
-            isDone(true)
         }
 
         let title = indexPath.section == 0 ? "Done" : "Undone"
         let doneAction = UIContextualAction(style: .normal, title: title) { _, _, isDone in
             if indexPath.section == 0 {
-                StorageManager.shared.done(self.currentTasks[indexPath.row])
+                StorageManager.shared.done(task)
                 tableView.moveRow(at: indexPath, to: IndexPath(row: self.completedTasks.count - 1, section: 1))
             } else {
-                StorageManager.shared.undone(self.completedTasks[indexPath.row])
+                StorageManager.shared.undone(task)
                 tableView.moveRow(at: indexPath, to: IndexPath(row: self.currentTasks.count - 1, section: 0))
             }
             isDone(true)
@@ -111,13 +104,13 @@ extension TasksViewController {
                 self.saveTask(withName: newValue, andNote: note)
             }
         }
-
         present(alert, animated: true)
     }
 
     private func saveTask(withName name: String, andNote note: String) {
         let task = Task(value: [name, note])
         StorageManager.shared.save(task, to: taskList)
+
         let rowIndex = IndexPath(row: currentTasks.index(of: task) ?? 0, section: 0)
         tableView.insertRows(at: [rowIndex], with: .automatic)
     }
