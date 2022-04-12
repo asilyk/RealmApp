@@ -50,6 +50,32 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		114F57AC280622AA003AE03D /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				A872A11220E9D82400ECE2BA /* Main.storyboard */,
+				A872A11720E9D82600ECE2BA /* LaunchScreen.storyboard */,
+			);
+			path = Storyboards;
+			sourceTree = "<group>";
+		};
+		114F57AD280622BB003AE03D /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A872A11520E9D82600ECE2BA /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		114F57AE280622D7003AE03D /* App */ = {
+			isa = PBXGroup;
+			children = (
+				A872A10E20E9D82400ECE2BA /* AppDelegate.swift */,
+				A872A11A20E9D82600ECE2BA /* Info.plist */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
 		51AA43EE7FE77F85F9EEEA29 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -93,11 +119,9 @@
 				A81BC31C256FED21002D9595 /* ViewControllers */,
 				A8969B33270F34B700F7DED0 /* Models */,
 				A8969B34270F34C900F7DED0 /* Services */,
-				A872A10E20E9D82400ECE2BA /* AppDelegate.swift */,
-				A872A11220E9D82400ECE2BA /* Main.storyboard */,
-				A872A11520E9D82600ECE2BA /* Assets.xcassets */,
-				A872A11720E9D82600ECE2BA /* LaunchScreen.storyboard */,
-				A872A11A20E9D82600ECE2BA /* Info.plist */,
+				114F57AC280622AA003AE03D /* Storyboards */,
+				114F57AE280622D7003AE03D /* App */,
+				114F57AD280622BB003AE03D /* Resources */,
 			);
 			path = RealmApp;
 			sourceTree = "<group>";
