@@ -60,8 +60,8 @@ class TasksViewController: UITableViewController {
 
     // MARK: - UITableViewDelegate
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        guard let tasks = indexPath.section == 0 ? self.currentTasks : self.completedTasks else { return nil }
-        guard let otherTasks = indexPath.section == 0 ? self.completedTasks : self.currentTasks else { return nil }
+        guard let tasks = indexPath.section == 0 ? currentTasks : completedTasks else { return nil }
+        guard let otherTasks = indexPath.section == 0 ? completedTasks : currentTasks else { return nil }
         let task = tasks[indexPath.row]
 
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { _, _, _ in
@@ -69,19 +69,19 @@ class TasksViewController: UITableViewController {
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
 
-        let editAction = UIContextualAction(style: .normal, title: "Edit") { _, _, _ in
+        let editAction = UIContextualAction(style: .normal, title: "Edit") { _, _, isDone in
             self.showAlert(with: task) {
                 tableView.reloadRows(at: [indexPath], with: .automatic)
             }
+            isDone(true)
         }
 
         let title = indexPath.section == 0 ? "Done" : "Undone"
         let doneAction = UIContextualAction(style: .normal, title: title) { _, _, isDone in
+            StorageManager.shared.done(task)
             if indexPath.section == 0 {
-                StorageManager.shared.done(task)
                 tableView.moveRow(at: indexPath, to: IndexPath(row: otherTasks.index(of: task) ?? 0, section: 1))
             } else {
-                StorageManager.shared.undone(task)
                 tableView.moveRow(at: indexPath, to: IndexPath(row: otherTasks.index(of: task) ?? 0, section: 0))
             }
             isDone(true)

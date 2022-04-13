@@ -56,10 +56,11 @@ class TaskListViewController: UITableViewController {
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
 
-        let editAction = UIContextualAction(style: .normal, title: "Edit") { _, _, _ in
+        let editAction = UIContextualAction(style: .normal, title: "Edit") { _, _, isDone in
             self.showAlert(with: taskList) {
                 tableView.reloadRows(at: [indexPath], with: .automatic)
             }
+            isDone(true)
         }
 
         let doneAction = UIContextualAction(style: .normal, title: "Done") { _, _, isDone in
@@ -90,9 +91,9 @@ class TaskListViewController: UITableViewController {
 
     @IBAction func sortingList(_ sender: UISegmentedControl) {
         if sender.selectedSegmentIndex == 0 {
-            taskLists = StorageManager.shared.realm.objects(TaskList.self)
+            taskLists = taskLists.sorted(byKeyPath: "date", ascending: true)
         } else {
-            taskLists = StorageManager.shared.realm.objects(TaskList.self).sorted(byKeyPath: "name", ascending: true)
+            taskLists = taskLists.sorted(byKeyPath: "name", ascending: true)
         }
         tableView.reloadData()
     }
