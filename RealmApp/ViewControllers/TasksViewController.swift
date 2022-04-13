@@ -16,7 +16,10 @@ class TasksViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
         title = taskList.name
+        tableView.allowsSelection = false
+
         currentTasks = taskList.tasks.filter("isComplete = false")
         completedTasks = taskList.tasks.filter("isComplete = true")
 
@@ -59,6 +62,7 @@ class TasksViewController: UITableViewController {
     // MARK: - UITableViewDelegate
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         guard let tasks = indexPath.section == 0 ? self.currentTasks : self.completedTasks else { return nil }
+        guard let otherTasks = indexPath.section == 0 ? self.completedTasks : self.currentTasks else { return nil }
         let task = tasks[indexPath.row]
 
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { _, _, _ in
@@ -76,10 +80,11 @@ class TasksViewController: UITableViewController {
         let doneAction = UIContextualAction(style: .normal, title: title) { _, _, isDone in
             if indexPath.section == 0 {
                 StorageManager.shared.done(task)
-                tableView.moveRow(at: indexPath, to: IndexPath(row: self.completedTasks.count - 1, section: 1))
+                tableView.moveRow(at: indexPath, to: IndexPath(row: otherTasks.index(of: task) ?? 0, section: 1))
+                
             } else {
                 StorageManager.shared.undone(task)
-                tableView.moveRow(at: indexPath, to: IndexPath(row: self.currentTasks.count - 1, section: 0))
+                tableView.moveRow(at: indexPath, to: IndexPath(row: otherTasks.index(of: task) ?? 0, section: 0))
             }
             isDone(true)
         }
