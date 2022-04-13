@@ -10,8 +10,10 @@ import RealmSwift
 import UIKit
 
 class TaskListViewController: UITableViewController {
+    // MARK: - Private Properties
     private var taskLists: Results<TaskList>!
 
+    // MARK: - Life Cycles Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         createTempData()
@@ -72,6 +74,7 @@ class TaskListViewController: UITableViewController {
         return UISwipeActionsConfiguration(actions: [doneAction, editAction, deleteAction])
     }
 
+    // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
         guard let indexPath = tableView.indexPathForSelectedRow else { return }
         guard let tasksVC = segue.destination as? TasksViewController else { return }
@@ -80,6 +83,7 @@ class TaskListViewController: UITableViewController {
         tasksVC.taskList = taskList
     }
 
+    // MARK: - IB Actions
     @IBAction func addButtonPressed(_: Any) {
         showAlert()
     }
@@ -93,6 +97,7 @@ class TaskListViewController: UITableViewController {
         tableView.reloadData()
     }
 
+    // MARK: - Private Methods
     private func createTempData() {
         DataManager.shared.createTempData {
             self.tableView.reloadData()
@@ -100,6 +105,7 @@ class TaskListViewController: UITableViewController {
     }
 }
 
+// MARK: - AlertController
 extension TaskListViewController {
     private func showAlert(with taskList: TaskList? = nil, completion: (() -> Void)? = nil) {
         let alert = AlertController.createAlert(withTitle: "New List", andMessage: "Please insert new value")

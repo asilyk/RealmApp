@@ -9,11 +9,14 @@
 import RealmSwift
 
 class TasksViewController: UITableViewController {
+    // MARK: - Public Properties
     var taskList: TaskList!
 
+    // MARK: - Private Properties
     private var currentTasks: Results<Task>!
     private var completedTasks: Results<Task>!
 
+    // MARK: - Life Cycles Methods
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -55,10 +58,6 @@ class TasksViewController: UITableViewController {
         return cell
     }
 
-    @objc private func addButtonPressed() {
-        showAlert()
-    }
-
     // MARK: - UITableViewDelegate
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         guard let tasks = indexPath.section == 0 ? self.currentTasks : self.completedTasks else { return nil }
@@ -81,7 +80,6 @@ class TasksViewController: UITableViewController {
             if indexPath.section == 0 {
                 StorageManager.shared.done(task)
                 tableView.moveRow(at: indexPath, to: IndexPath(row: otherTasks.index(of: task) ?? 0, section: 1))
-                
             } else {
                 StorageManager.shared.undone(task)
                 tableView.moveRow(at: indexPath, to: IndexPath(row: otherTasks.index(of: task) ?? 0, section: 0))
@@ -96,7 +94,12 @@ class TasksViewController: UITableViewController {
     }
 }
 
+//MARK: - AlertController
 extension TasksViewController {
+    @objc private func addButtonPressed() {
+        showAlert()
+    }
+
     private func showAlert(with task: Task? = nil, completion: (() -> Void)? = nil) {
         let title = task == nil ? "New Task" : "Edit Task"
         let alert = AlertController.createAlert(withTitle: title, andMessage: "What do you want to do?")
